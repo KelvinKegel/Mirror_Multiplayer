@@ -10,8 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6683129640649835951}
   - component: {fileID: 6683129640649835944}
-  - component: {fileID: 8671713195494481349}
-  - component: {fileID: 1210704537277408695}
+  - component: {fileID: 5274645786046806429}
   m_Layer: 0
   m_Name: Esfera
   m_TagString: Collectable
@@ -47,7 +46,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.75, y: 1, z: 0.75}
   m_Center: {x: 0, y: 0.5, z: 0}
---- !u!114 &8671713195494481349
+--- !u!114 &5274645786046806429
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -56,26 +55,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6683129640649835950}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Script: {fileID: 11500000, guid: ef28c58950aa9864d955b34caa35fdb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneId: 3736488750
-  serverOnly: 0
-  m_AssetId: 
---- !u!114 &1210704537277408695
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6683129640649835950}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0841f1aedb2ba9543a684942a19b5064, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
+  player: {fileID: 0}
 --- !u!1 &6683129640938431450
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,81 +1,43 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Mirror;
+using System;
 
-public class PlayerController : NetworkBehaviour
+public class PlayerController : MonoBehaviour
 {
-    private Renderer m_Renderer;            //Referência para o componente de renderização do objeto
-    private NetworkIdentity m_Identity;     //Referência para o componente "NetworkIdentity"
+    public event Action OnTakeDamage;    
 
-    [SyncVar(hook = "SetColor")]
-    private Color playerColor;
+    [SerializeField]
+    private int health = 100;
 
-    private Material cachedMaterial;
-
-    private void Awake()
+    private void OnEnable()
     {
-        m_Renderer = GetComponent<Renderer>();
-        m_Identity = GetComponent<NetworkIdentity>();
+        OnTakeDamage += TakeDamage;
     }
 
-    //Função chamada ao Spawn de um cliente na cena
-    public override void OnStartLocalPlayer()
+    private void OnDisable()
     {
-        base.OnStartLocalPlayer();
-        //Criando uma variável do tipo Color e recebendo o retorno da função RandomColor()
-        playerColor = RandomColor();
-        //Chamar a função com atributo Command, que será executada no servidor
-        //CmdChangeColor();
-    }   
-
-    //Função que será invocada no objeto do cliente e executada somente no servidor
-    [Command]
-    private void CmdChangeColor()
-    {
-        //Chama a função SetColor, passando como parâmetro a variável "playerColor"
-        //SetColor(playerColor);
-        //Invoca a função Rpc no servidor, para executar em todos os clientes
-        RpcChangeColor(playerColor);
+        OnTakeDamage -= TakeDamage;
     }
 
-    //Função que será invocada no objeto do servidor e executada em todos os clientes que possuírem essa classe
-    [ClientRpc]
-    private void RpcChangeColor(Color _color)
+    public void TakeDamage()
     {
-        //Chama a função SetColor em todos objetos que possuírem a mesma
-        //SetColor(_color);
-    }
-    
-    //Função pública que faz o sorteio e alteração da variável playerColor
-    public void ChangeColor()
-    {
-        playerColor = RandomColor();
+        health -= 10;
     }
 
-    private void SetColor(Color oldColor, Color newColor)
+    private void OnTriggerEnter(Collider other)
     {
-        if(cachedMaterial == null)
-            cachedMaterial = m_Renderer.material;
-        //Acessar o material que está associado ao renderizador, e alterar a cor dele
-        cachedMaterial.color = newColor;
-    }
-
-    //Função que cria uma cor com valores RGB aleatórios
-    private Color RandomColor()
-    {
-        Color randomColor;
-
-        randomColor = new Color
-            (
-                Random.Range(.0f, 1f), Random.Range(.0f, 1f), Random.Range(.0f, 1f)
-            );
-
-        return randomColor;
-    }
-
-    private void OnDestroy()
-    {
-        Destroy(cachedMaterial);
+        //Cria uma variável temporária do tipo NetworkIdentity
+        Collectable collectable;
+        //Tenta acessar o componente "NetworkIdentity" do objeto que ativou o trigger
+        collectable = other.GetComponent<Collectable>();
+        //Se o valor da variável não for null...
+        if (collectable != null)
+        {
+            if(OnTakeDamage != null)
+            {
+                OnTakeDamage();
+            }
+        }       
     }
 }
