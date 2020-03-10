@@ -9,7 +9,8 @@ namespace Prototipo.Multiplayer
     {
         private bool isCarrying = false;
 
-        [SerializeField] private GameObject pickup;
+        [SerializeField]
+        private GameObject pickup;      
 
         public Transform itemPosition;
 
@@ -23,7 +24,7 @@ namespace Prototipo.Multiplayer
             {
                 if (Input.GetKeyDown(KeyCode.E))
                 {
-                    if (!isCarrying) //isCarrying == false
+                    if (!isCarrying)
                     {
                         CmdCollect();
                     }
@@ -61,15 +62,47 @@ namespace Prototipo.Multiplayer
 
         private void OnTriggerEnter(Collider other)
         {
+            Collectable collectable;
+
+            collectable = other.GetComponent<Collectable>();
+
+            if(collectable != null)
+            {
+                Debug.Log("Objeto: " + other.name);
+
+                if (!isCarrying)
+                    pickup = other.gameObject;
+            }            
+
+            /*
             if (other.tag == "Collectable")
             {
                 if (!isCarrying)
                     pickup = other.gameObject;
             }
+            */
         }
 
         private void OnTriggerExit(Collider other)
         {
+            Collectable collectable;
+
+            collectable = other.GetComponent<Collectable>();
+
+            if (collectable != null)
+            {
+                Debug.Log("Objeto: " + other.name);
+
+                if (pickup != null && pickup == other.gameObject)
+                {
+                    if (!isCarrying)
+                    {
+                        pickup = null;
+                    }
+                }
+            }
+
+            /*
             if (other.tag == "Collectable")
             {
                 if (pickup != null && pickup == other.gameObject)
@@ -80,6 +113,7 @@ namespace Prototipo.Multiplayer
                     }
                 }
             }
+            */
         }
     }
 }

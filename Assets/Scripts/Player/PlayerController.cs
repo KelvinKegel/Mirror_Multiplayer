@@ -7,7 +7,8 @@ public class PlayerController : NetworkBehaviour
 {
     private Renderer m_Renderer;            //Referência para o componente de renderização do objeto
     private NetworkIdentity m_Identity;     //Referência para o componente "NetworkIdentity"
-    
+
+    [SyncVar(hook = "SetColor")]
     private Color playerColor;
 
     private Material cachedMaterial;
@@ -25,7 +26,7 @@ public class PlayerController : NetworkBehaviour
         //Criando uma variável do tipo Color e recebendo o retorno da função RandomColor()
         playerColor = RandomColor();
         //Chamar a função com atributo Command, que será executada no servidor
-        CmdChangeColor();
+        //CmdChangeColor();
     }   
 
     //Função que será invocada no objeto do cliente e executada somente no servidor
@@ -33,7 +34,7 @@ public class PlayerController : NetworkBehaviour
     private void CmdChangeColor()
     {
         //Chama a função SetColor, passando como parâmetro a variável "playerColor"
-        SetColor(playerColor);
+        //SetColor(playerColor);
         //Invoca a função Rpc no servidor, para executar em todos os clientes
         RpcChangeColor(playerColor);
     }
@@ -43,10 +44,16 @@ public class PlayerController : NetworkBehaviour
     private void RpcChangeColor(Color _color)
     {
         //Chama a função SetColor em todos objetos que possuírem a mesma
-        SetColor(_color);
+        //SetColor(_color);
+    }
+    
+    //Função pública que faz o sorteio e alteração da variável playerColor
+    public void ChangeColor()
+    {
+        playerColor = RandomColor();
     }
 
-    private void SetColor(Color newColor)
+    private void SetColor(Color oldColor, Color newColor)
     {
         if(cachedMaterial == null)
             cachedMaterial = m_Renderer.material;
