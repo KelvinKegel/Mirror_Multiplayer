@@ -29,10 +29,16 @@ public class PlayerPickup : MonoBehaviour
     {
         if(pickup != null)
         {
-            pickup.transform.parent = itemPosition;
-            pickup.transform.localPosition = Vector3.zero;
+            Collectable collectable = pickup.GetComponent<Collectable>();
 
-            isCarrying = true;
+            if (collectable.IsActivated)
+            {
+                collectable.CollectObject(itemPosition);
+
+                isCarrying = true;
+            }
+            else
+                return;
         }
     }
 
@@ -41,10 +47,14 @@ public class PlayerPickup : MonoBehaviour
     {
         if(pickup != null)
         {
-            pickup.transform.parent = null;
-            pickup.transform.position = transform.position;
+            Collectable collectable = pickup.GetComponent<Collectable>();
+            
+            if(collectable.IsActivated)
+            {
+                collectable.Drop(transform);
 
-            isCarrying = false;
+                isCarrying = false;
+            }
         }
     }
 

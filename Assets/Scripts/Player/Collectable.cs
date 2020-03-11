@@ -4,26 +4,65 @@ using UnityEngine;
 
 public class Collectable : MonoBehaviour
 {
-    public GameObject player;
+    private bool isCarried = false;
+    private bool isActivated = true;
 
-    private PlayerController m_PlayerController;
-
-    private void Start()
+    public bool IsCarried
     {
-        player = GameObject.FindGameObjectWithTag("Player");
-
-        m_PlayerController = player.GetComponent<PlayerController>();
-
-        m_PlayerController.OnTakeDamage += MostraMensagem;
+        get { return isCarried; }
     }
 
-    private void OnDisable()
+    public bool IsActivated
     {
-        m_PlayerController.OnTakeDamage -= MostraMensagem;
+        get { return isActivated; }
     }
 
-    void MostraMensagem()
+    private Transform holder;
+
+    void Awake()
     {
-        Debug.Log("Colidiu com " + gameObject.name);
+        if(transform.parent != null)
+        {
+            holder = transform.parent;
+        }
+    }    
+
+    public void CollectObject(Transform carryPosition)
+    {
+        isCarried = true;
+
+        transform.parent = carryPosition;
+        transform.localPosition = Vector3.zero;
+    }
+
+    public void Drop(Transform dropLocation)
+    {
+        isCarried = false;
+
+        transform.parent = holder;
+
+        Vector3 dropPosition = new Vector3(dropLocation.position.x, 0, dropLocation.position.z);
+
+        transform.localPosition = dropPosition;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.name == "Plataforma" && isCarried == false)
+        {
+            Debug.Log("Está na plataforma");
+
+            isActivated = false;
+
+            GameManager.Instance.ObjectCollected();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.name == "Plataforma")
+        {
+            Debug.Log("Não está na plataforma");
+        }
     }
 }

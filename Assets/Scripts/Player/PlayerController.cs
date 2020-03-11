@@ -5,7 +5,9 @@ using System;
 
 public class PlayerController : MonoBehaviour
 {
-    public event Action OnTakeDamage;    
+    public event Action OnTakeDamage;
+
+    PlayerMovement movement;
 
     [SerializeField]
     private int health = 100;
